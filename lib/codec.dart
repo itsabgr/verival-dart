@@ -1,28 +1,9 @@
 import 'dart:typed_data';
+import 'package:quiver/core.dart';
 import 'package:verival/crypto.dart';
 import 'package:verival/utils.dart';
 import 'package:cbor/cbor.dart';
 
-void main() {
-  {
-    var now = timestamp();
-    var args = {"a": "b", "c": 1, 1: "s", "PK": rand(99)};
-    var data = Data.marshal(now, args);
-    var sk = genSK();
-    var sig = sign(sk, data.bytes);
-    var update = Decoded.encode(sig, data);
-    var decoded = Decoded.decode(update);
-    var args2 = decoded.data.unmarshal();
-    args.forEach((key, value) {
-      if (value is Uint8List) {
-        assert(0 == eq([args2[key], value]));
-        return;
-      }
-      assert(args2[key] == value);
-    });
-    assert(verify(decoded.data.bytes, decoded.signature, derivePK(sk)));
-  }
-}
 
 class Data {
   final Uint8List bytes;
@@ -54,6 +35,10 @@ class Data {
     return Data(Uint8List.fromList(b));
   }
 
+  @override
+  int get hashCode => bytes.hashCode;
+
+  @override
   bool operator ==(other) => other is Data && 0 == eq([bytes, other.bytes]);
 }
 
@@ -88,6 +73,10 @@ class Decoded {
     return Uint8List.fromList(b);
   }
 
+  @override
+  int get hashCode => hash2(signature.hashCode, data.hashCode);
+
+  @override
   bool operator ==(other) =>
       other is Decoded &&
       0 == eq([signature, other.signature]) &&
