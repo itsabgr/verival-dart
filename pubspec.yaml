@@ -1,0 +1,19 @@
+name: verival
+description: verival client in dart
+version: 0.1.0
+
+environment:
+  sdk: '>=2.14.3 <3.0.0'
+
+
+dependencies:
+  quiver: ^3.0.1+1
+  # dio: ^4.0.1
+  cbor: ^4.1.0
+  http: ^0.13.4
+  crypto: ^3.0.1
+  ed25519_edwards: ^0.3.1
+
+dev_dependencies:
+  lints: ^1.0.0
+  test: ^1.19.2
